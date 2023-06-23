@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTHER - Die andere Seite</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img src="/img/logo.svg" width="30" height="30" class="d-inline-block align-top" alt="Logo">
+            OTHER
+        </a>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero bg-primary text-white text-center">
+    <div class="container">
+        <h1 class="display-4">Willkommen bei OTHER-Gaming</h1>
+        <p class="lead">Weil jede gute Firma zwei Standbeine hat.</p>
+    </div>
+    <a href="/dashboard" class="btn btn-success mb-3">Zur Startseite</a>
+</section>
+
+<!-- Game Section -->
+<section class="game text-center">
+    <div class="container">
+        <h2>Spielen Sie unser cooles Spiel</h2>
+        <p> Nutzen Sie die Pfeiltasten um Münzen zu sammeln.</p>
+        <p> Münze einsammlen: +10</p>
+        <p> OTHER einsammeln: +50</p>
+        <p> Münze oder OTHER verlieren: -20</p>
+        <div id="game-container"></div>
+    </div>
+</section>
+
+
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3">
+    <div class="container">
+        &copy; 2023 OTHER. Alle Rechte vorbehalten.
+    </div>
+</footer>
+
+<!-- Game Script -->
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+<script>
+    // Phaser Game Script
+    const config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        parent: 'game-container',
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 200 }
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    const playerSpeed = 400;
+    const coinDropProbability = 0.02; // Probability of a coin dropping each frame
+    const otherDropProbability = coinDropProbability / 5; // Probability of an "other" dropping each frame
+    const game = new Phaser.Game(config);
+
+    function preload() {
+        // Preload game assets
+        this.load.image('player', 'img/player.png');
+        this.load.image('coin', 'img/coin.png');
+        this.load.image('other', 'img/logo.png'); // Preload the "other" image
+    }
+
+    function create() {
+        // Create game objects and setup
+        const playerScale = Math.min(1, config.width / 10 / 1000); // Assuming player image is 1000px wide
+        this.player = this.physics.add.image(config.width / 2, config.height / 2, 'player').setScale(playerScale);
+        this.player.setCollideWorldBounds(true); // The player cannot leave the game area
+
+        this.coins = this.physics.add.group(); // Empty coin group
+        this.others = this.physics.add.group(); // Empty "other" group
+
+        this.score = 0;
+        this.scoreText = this.add.text(16, 16, 'Score: 0', { fontSize: '32px', fill: '#fff' });
+
+        this.physics.add.overlap(this.player, this.coins, collectCoin, null, this);
+        this.physics.add.overlap(this.player, this.others, collectOther, null, this); // Overlap for "other" elements
+    }
+
+    function update() {
+        // Update game logic
+        const cursors = this.input.keyboard.createCursorKeys();
+        this.player.setVelocity(0);
+
+        if (cursors.left.isDown) {
+            this.player.setVelocityX(-playerSpeed);
+        } else if (cursors.right.isDown) {
+            this.player.setVelocityX(playerSpeed);
+        }
+
+        if (cursors.up.isDown) {
+            this.player.setVelocityY(-playerSpeed);
+        } else if (cursors.down.isDown) {
+            this.player.setVelocityY(playerSpeed);
+        }
+
+        // Coin generation logic
+        if (Math.random() < coinDropProbability) { // Drop coin with certain probability
+            const coinScale = Math.min(1, config.width / 20 / 500);
+            let newCoin = this.physics.add.image(Math.random() * config.width, 0, 'coin').setScale(coinScale);
+            this.coins.add(newCoin);
+        }
+
+        // "Other" generation logic
+        if (Math.random() < otherDropProbability) { // Drop "other" with certain probability
+            const otherScale = Math.min(1, config.width / 20 / 500);
+            let newOther = this.physics.add.image(Math.random() * config.width, 0, 'other').setScale(otherScale);
+            this.others.add(newOther);
+        }
+
+        // Remove coins and "others" that have fallen off the screen and deduct score
+        this.coins.children.iterate(function (coin) {
+            if (coin.y > config.height && !coin.hitTheGround) {
+                coin.hitTheGround = true; // Mark that the coin has hit the ground
+                this.score -= 20; // Deduct score
+                this.scoreText.setText('Score: ' + this.score); // Update score text
+            }
+        }, this);
+
+        this.others.children.iterate(function (other) {
+            if (other.y > config.height && !other.hitTheGround) {
+                other.hitTheGround = true; // Mark that the "other" has hit the ground
+                this.score -= 20; // Deduct score
+                this.scoreText.setText('Score: ' + this.score); // Update score text
+            }
+        }, this);
+    }
+
+    function collectCoin(player, coin) {
+        coin.disableBody(true, true);
+        this.score += 10;
+        this.scoreText.setText('Score: ' + this.score);
+    }
+
+    function collectOther(player, other) {
+        other.disableBody(true, true);
+        this.score += 50; // Increase score by 50 for "other"
+        this.scoreText.setText('Score: ' + this.score);
+    }
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,27 @@
+<!-- <form action="/login" method="POST" class="mt-4">
+    <div class="mb-3">
+        <label for="username" class="form-label">Nutzername</label>
+        <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Passwort</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Anmelden</button>
+</form>
+-->
+
+<div class="col-6">
+    <h3>Log-in</h3>
+    <form action="/authenticate" method="POST">
+        <div class="mb-3">
+            <label for="inputName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="inputName" name="name">
+        </div>
+        <div class="mb-3">
+            <label for="inputPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="inputPassword" name="password">
+        </div>
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+</div>

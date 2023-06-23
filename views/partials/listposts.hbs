@@ -1,0 +1,59 @@
+<style>
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+    }
+
+    .card-flex {
+        display: flex;
+        flex-direction: row; /* Zeilenrichtung. Verwenden Sie "column" für Spaltenrichtung */
+        /* justify-content: space-between; /* Inhalt gleichmäßig verteilt; erste Element am Anfang, letztes Element am Ende */
+        align-items: center;
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        order: 0;
+    }
+
+    .card-body .card-title, .card-body .card-text {
+        font-size: 0.8rem;
+        margin-bottom: 0;
+    }
+
+    .card-img-left {
+        margin-right: 0.5rem;
+        margin-top: 0.5rem;
+        margin-bottom:0.5rem;
+        order: 0;
+    }
+
+    .card-name {
+        font-weight: bold;
+    }
+
+    .inline-paragraphs p {
+        display: inline;
+    }
+
+
+</style>
+<div class="row">
+    {{#each posts}}
+        <div class="card card-flex">
+            <img src="../img/users/{{this.image}}.png" class="card-img-left img-fluid rounded-circle profile-pic" alt="Profile picture">
+            <div class="card-content">
+                <div class = "inline-paragraphs">
+                    <p class="card-name">{{this.name}}</p>
+                    <p class="card-handle">@{{this.name}}</p>
+                    <p class="card-date">{{this.date}}</p>
+                </div>
+
+                <p class="card-text">{{this.content}}</p>
+            </div>
+        </div>
+    {{/each}}
+</div>

@@ -1,0 +1,42 @@
+<style>
+    .card-name {
+        font-weight: bold;
+    }
+    .inline-paragraphs p {
+        display: inline;
+    }
+    .upload-form {
+        max-width: 300px; /* Ändern Sie die Breite nach Bedarf */
+        margin-bottom: 20px;
+    }
+</style>
+<h2>Nutzerprofil von {{this.name}}</h2>
+<div class="profile">
+    <div class="row mt-5">
+        <div class="col-sm-4">
+            <img src="../img/users/{{this.profile_pic}}.png" alt="Profilbild {{this.profile_pic}}" class="rounded-circle img-thumbnail mb-3">
+            <div class="inline-paragraphs">
+                <p class="card-name"><a href="/profile/{{this.user_id}}">{{this.name}}</a></p>
+                <p class="card-handle">@{{this.name}}</p>
+            </div>
+            <p>Mitglied seit: {{this.created}}</p>
+            <p>Geburtsdatum: {{this.birthday}}</p>
+            <p>Biographie: {{this.bio_text}}</p>
+            {{#if isOwnProfile}}
+                <form action="/profile/uploadProfilePicture" method="post" enctype="multipart/form-data" class="upload-form">
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Profilbild auswählen</label>
+                        <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Bild hochladen</button>
+                </form>
+            {{/if}}
+        </div>
+        <div class="col-sm-8">
+            <h3>{{this.posts_count}} Others</h3>
+            <h3>Followers: {{this.followers_count}}</h3>
+            <h3>Du folgst: {{this.following_count}}</h3>
+            {{>listposts}}
+        </div>
+    </div>
+</div>

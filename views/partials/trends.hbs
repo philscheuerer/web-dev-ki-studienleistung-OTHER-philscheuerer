@@ -1,0 +1,11 @@
+<div class="container mt-5">
+    <h3>{{title}}</h3>
+    <ul class="list-group">
+        {{#each trending}}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{this.[1]}} Other über</span>
+                <span style="font-weight: bold">{{this.[0]}} </span>
+            </li>
+        {{/each}}
+    </ul>
+</div>
